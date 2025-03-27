@@ -32,7 +32,7 @@ export class MoviesComponent implements OnInit {
 
   searchMovies() {
     this.filteredMovies = this.movies.filter(movie =>
-      movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      movie.Title.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 }
