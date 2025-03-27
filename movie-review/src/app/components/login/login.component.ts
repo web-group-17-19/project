@@ -28,7 +28,7 @@ export class LoginComponent {
     if (user) {
       const fakeToken = `fake-jwt-token-${new Date().getTime()}`;
       localStorage.setItem('jwt_token', fakeToken);
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/home');
     } else {
       alert("Invalid credentials!");
     }
