@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService} from '../../service/movie.service';
+import { Router } from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 
@@ -17,7 +18,7 @@ export class MoviesComponent implements OnInit {
   filteredMovies: any[] = [];
   searchQuery: string = "";
 
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: MovieService, private router: Router) {} // Inject Router
 
   ngOnInit() {
     this.fetchMovies();
@@ -34,5 +35,9 @@ export class MoviesComponent implements OnInit {
     this.filteredMovies = this.movies.filter(movie =>
       movie.Title.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
+  }
+
+  goToMovieDetails(movie: any) {
+    this.router.navigate(['/home/dashboard/movies', movie.imdbID]);
   }
 }
