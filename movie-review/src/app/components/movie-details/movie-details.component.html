@@ -1,1 +1,27 @@
-<p>movie-details works!</p>
+<div class="movie-details-container">
+  <button class="back-button" (click)="goBack()">⬅ Go Back</button>
+
+  <div class="movie-details">
+    <div class="movie-info">
+      <h2>{{ movie.Title }}</h2>
+      <p><strong>Year:</strong> {{ movie.Year }}</p>
+      <p><strong>Genre:</strong> {{ movie.Genre }}</p>
+      <p><strong>Director:</strong> {{ movie.Director }}</p>
+      <p><strong>Actors:</strong> {{ movie.Actors }}</p>
+      <p><strong>Plot:</strong> {{ movie.Plot }}</p>
+
+      <div class="ratings">
+
+        <h3>Ratings:</h3>
+        <div *ngFor="let r of movie.Ratings" class="rating">
+          <strong>{{ r.Source }}:</strong>
+          <span class="stars">{{ getStars(r.Value) }}</span> ({{ r.Value }})
+        </div>
+          </div>
+    </div>
+
+    <div class="movie-poster-container">
+      <img [src]="movie.Poster" alt="{{ movie.Title }}" class="movie-poster">
+    </div>
+  </div>
+</div>
