@@ -1,10 +1,18 @@
 <nav class="navbar">
   <ul>
-    <li><a routerLink="dashboard">Dashboard</a></li>
-    <li><button (click)="logout()">Logout</button></li>
+    <li><a class="home" routerLink="/home"><i class="fa-solid fa-house"></i></a></li>
+    <li><a class="dashboard" routerLink="/dashboard"><i class="fa-solid fa-table-columns"></i></a></li>
+    <li><button (click)="logout()"><i class="fa-solid fa-right-from-bracket"></i></button></li>
   </ul>
 </nav>
 
 <div class="content">
+  <div class="slider">
+    <button (click)="prevSlide()">‹</button>
+    <div class="slide-container">
+      <img *ngFor="let img of images; let i = index" [src]="img" [class.active]="i === currentIndex" alt="Slide"/>
+    </div>
+    <button (click)="nextSlide()">›</button>
+  </div>
   <router-outlet></router-outlet>
 </div>

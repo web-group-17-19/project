@@ -1,25 +1,15 @@
 import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-movie-details',
-  imports: [],
-  templateUrl: './movie-details.component.html',
-  styleUrl: './movie-details.component.css'
-})
-export class MovieDetailsComponent {
-
-}import { Component, OnInit } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../service/movie.service';
-import {NgForOf} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-movie-details',
+  standalone:true,
+  imports: [CommonModule],
   templateUrl: './movie-details.component.html',
-  imports: [
-    NgForOf
-  ],
-  styleUrls: ['./movie-details.component.css']
+  styleUrl: './movie-details.component.css'
 })
 export class MovieDetailsComponent implements OnInit {
   movie: any;
@@ -52,4 +42,3 @@ export class MovieDetailsComponent implements OnInit {
     window.history.back();
   }
 }
-

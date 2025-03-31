@@ -9,18 +9,11 @@ import { MovieDetailsComponent } from './components/movie-details/movie-details.
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {
-    path: 'home',
-    component: HomeComponent,
+  {path: 'home',component: HomeComponent},
+  {path: 'dashboard',component: DashboardComponent,
     children: [
-      {
-        path: 'dashboard',
-        component: DashboardComponent,
-        children: [
-          { path: 'movies', component: MoviesComponent },  // Movies list page
-          { path: 'movies/:id', component: MovieDetailsComponent }  // Movie details page
-        ]
-      }
+      { path: 'movies', component: MoviesComponent },  // Movies list page
+      { path: 'movies/:id', component: MovieDetailsComponent }  // Movie details page
     ]
   }
 ];

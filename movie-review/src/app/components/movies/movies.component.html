@@ -1,12 +1,15 @@
 
 <div>
   <h2>Movies List</h2>
-  <input type="text" [(ngModel)]="searchQuery" placeholder="Search movies" (input)="searchMovies()">
+  <div class="srch">
+    <input class="srch1" type="text" [(ngModel)]="searchQuery" placeholder="Search movies" (input)="searchMovies()">
+    <img src="https://images-na.ssl-images-amazon.com/images/I/41gYkruZM2L.png" alt="search icon" class="button">
+  </div>
 
   <div class="movies-container">
     <div *ngFor="let movie of filteredMovies" class="movie-card" (click)="goToMovieDetails(movie)">
       <img [src]="movie.Poster" alt="{{ movie.Title }}" class="movie-poster">
-      <h3>{{ movie.Title }}</h3>
+      <h3>{{ movie.Title }}<br> <p>{{movie.Genre}}</p></h3>
     </div>
   </div>
 </div>

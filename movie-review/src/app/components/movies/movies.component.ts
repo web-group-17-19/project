@@ -7,10 +7,8 @@ import {NgForOf} from '@angular/common';
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
-  imports: [
-    FormsModule,
-    NgForOf
-  ],
+  standalone:true,
+  imports: [FormsModule,NgForOf],
   styleUrls: ['./movies.component.css']
 })
 export class MoviesComponent implements OnInit {
@@ -38,6 +36,6 @@ export class MoviesComponent implements OnInit {
   }
 
   goToMovieDetails(movie: any) {
-    this.router.navigate(['/home/dashboard/movies', movie.imdbID]);
+    this.router.navigate(['/dashboard/movies', movie.imdbID]);
   }
 }

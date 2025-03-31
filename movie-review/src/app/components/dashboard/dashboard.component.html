@@ -1,9 +1,19 @@
-<h2>Dashboard</h2>
-
 <nav class="navbar">
+  <ul>
+    <li><a class="home" routerLink="/home"><i class="fa-solid fa-house"></i></a></li>
+    <li><a class="dashboard" routerLink="/dashboard"><i class="fa-solid fa-table-columns"></i></a></li>
+    <li><button (click)="logout()"><i class="fa-solid fa-right-from-bracket"></i></button></li>
+  </ul>
+</nav>
+<div class="content">
+  <h2>Dashboard</h2>
+
+<nav class="navbar2">
   <ul>
     <a routerLink="movies">Movies  1</a>
   </ul>
 </nav>
 
 <router-outlet></router-outlet>
+
+</div>

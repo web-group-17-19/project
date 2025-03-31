@@ -22,7 +22,7 @@
   position: relative;
   z-index: 2;
   width: 400px;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(3, 2, 2, 0.9);
   padding: 40px;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
