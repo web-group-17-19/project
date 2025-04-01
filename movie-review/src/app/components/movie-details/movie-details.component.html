@@ -24,4 +24,21 @@
       <img [src]="movie.Poster" alt="{{ movie.Title }}" class="movie-poster">
     </div>
   </div>
+  <div class="review">
+    <h3>Add a review</h3><br>
+    <div class="feedback">
+      <textarea [(ngModel)]="newReview.text" placeholder="Your review"></textarea>
+      <button class="leave" (click)="addReview()">Leave</button>
+    </div>
+  </div>
+  
+  <div class="reviews">
+    <h3>Reviews</h3>
+    <ul>
+      <li *ngFor="let review of reviews">
+        {{ review.text }}
+      </li>
+    </ul>
+  </div>
+  
 </div>

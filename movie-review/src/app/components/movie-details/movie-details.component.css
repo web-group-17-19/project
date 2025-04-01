@@ -19,6 +19,8 @@
 }
 
 .movie-details {
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -42,4 +44,46 @@
 .stars {
   color: gold;
   font-size: 18px;
+}
+.review{
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: inline-block;
+}
+.feedback{
+  display: flex;
+  gap: 5px;
+}
+textarea{
+  display: flex;
+  padding-top: 10px;
+  padding-left: 10px;
+  width: 300px;
+  height: 30px;
+
+}
+.leave{
+  margin-top: 4px;
+  width: 50px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: aliceblue;
+}
+.leave:hover{
+  background-color: #0056b3;
+
+}
+.reviews{
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.reviews ul{
+  list-style: none;
+  margin-bottom: 5px;
+}
+.reviews li{
+    background: white;
+
 }
