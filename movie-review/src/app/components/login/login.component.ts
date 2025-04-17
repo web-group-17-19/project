@@ -1,35 +1,34 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone:true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  logObj: any = {
-    EmailId: "",
-    Password: ""
+  logObj = {
+    username: '',
+    password: ''
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onLogin() {
-    const users = [
-      { EmailId: "user@example.com", Password: "password123" }
-    ];
-
-    const user = users.find(u => u.EmailId === this.logObj.EmailId && u.Password === this.logObj.Password);
-
-    if (user) {
-      const fakeToken = `fake-jwt-token-${new Date().getTime()}`;
-      localStorage.setItem('jwt_token', fakeToken);
-      this.router.navigateByUrl('/home');
-    } else {
-      alert("Invalid credentials!");
-    }
+    this.authService.login(this.logObj).subscribe({
+      next: (tokens: any) => {
+        this.authService.storeTokens(tokens);
+        this.router.navigateByUrl('/home');
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Invalid credentials!");
+      }
+    });
   }
 }

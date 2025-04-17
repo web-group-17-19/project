@@ -1,9 +1,13 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, permissions
+from .models import Review
+from .serializers import ReviewSerializer
 
-class ProtectedAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        return Response({"message" : "Authenticated", "user" : request.user.username})
+    def get_queryset(self):
+        return Review.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

@@ -9,11 +9,22 @@ import { MovieDetailsComponent } from './components/movie-details/movie-details.
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {path: 'home',component: HomeComponent},
-  {path: 'dashboard',component: DashboardComponent,
+  {
+    path: '',
+    canActivate: [AuthGuard],
     children: [
-      { path: 'movies', component: MoviesComponent },  
-      { path: 'movies/:id', component: MovieDetailsComponent } 
+      { path: 'home', component: HomeComponent },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [AuthGuard],
+        children: [
+          { path: 'movies', component: MoviesComponent, canActivate: [AuthGuard] },
+          { path: 'movies/:id', component: MovieDetailsComponent, canActivate: [AuthGuard]}
+        ]
+      }
     ]
-  }
+  },
+  { path: '**', redirectTo: 'login' }
 ];
+

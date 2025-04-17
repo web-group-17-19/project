@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Router, RouterOutlet, RouterModule} from '@angular/router';
-import { CommonModule } from '@angular/common'; // ✅ Добавляем импорт CommonModule
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { CommonModule } from '@angular/common'; // ✅ Добавляем имп
   imports: [RouterOutlet, RouterModule, CommonModule],
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   images = [
     '../../../assets/work.jpg',
     '../../../assets/galaxy.jpg',
@@ -19,7 +20,13 @@ export class HomeComponent {
     '../../../assets/transf.jpg'
   ];
   currentIndex = 0;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   nextSlide() {
     this.currentIndex = (this.currentIndex + 1) % this.images.length;
@@ -30,8 +37,17 @@ export class HomeComponent {
 
 
   logout() {
-    localStorage.removeItem('jwt_token');
-    this.router.navigate(['/login']);
-  }
+    this.authService.logout().subscribe({
+      next: () => {
+        this.authService.clearTokens();
+        this.router.navigate(['/login'], { replaceUrl: true });
+      },
+      error: () => {
+        this.authService.clearTokens();
+        this.router.navigate(['/login'], { replaceUrl: true });
+      }
+    });
+    
+  }   
   
 }
