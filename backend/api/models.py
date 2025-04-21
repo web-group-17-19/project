@@ -23,13 +23,12 @@ class Movie(models.Model):
         return self.title
 
 class Review(models.Model):
-    text = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.PositiveSmallIntegerField(default=0)
-
-    def __str__(self):
-        return self.text
+    
+     text = models.TextField()
+     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+ 
+     def __str__(self):
+         return self.text
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
