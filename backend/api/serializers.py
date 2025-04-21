@@ -1,22 +1,32 @@
 from rest_framework import serializers
-from .models import Movie, Review, Genre
 from django.contrib.auth.models import User
+from .models import Review, Movie, Genre, Profile
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['id', 'name']
+
+class MovieSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Movie
+        fields = ['id', 'title', 'description', 'release_date', 'genres']
 
 class ReviewSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    movie = serializers.StringRelatedField()
+
     class Meta:
         model = Review
         fields = '__all__'
         read_only_fields = ['owner']
 
-class MovieSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Movie
-        fields = '__all__'
-
-class LoginSerializer(serializers.Serializer):
+class SimpleUserSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    email = serializers.EmailField()
 
-class CustomMovieRatingSerializer(serializers.Serializer):
-    title = serializers.CharField()
-    average_rating = serializers.FloatField()
+class BasicReviewSerializer(serializers.Serializer):
+    text = serializers.CharField()
+    rating = serializers.IntegerField()
