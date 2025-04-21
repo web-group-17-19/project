@@ -1,30 +1,55 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
-from .views import (
-    ReviewViewSet, 
-    MovieViewSet, 
-    GenreViewSet,
-    RatingViewSet,
-    basic_review_create,
-    MovieListAPIView, 
-    MovieWithRatingsAPIView
+from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import AllowAny
+from .models import Movie
+from .models import Review, Movie, Genre, Rating
+from .serializers import (
+    ReviewSerializer, GenreSerializer,
+    BasicReviewSerializer, MovieSerializer, RatingSerializer
 )
+from django.contrib.auth.models import User
 
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-router = DefaultRouter()
-router.register(r'reviews', ReviewViewSet, basename='review')
-router.register(r'movies', MovieViewSet, basename='movie')
-router.register(r'genres', GenreViewSet, basename='genre')
-router.register(r'ratings', RatingViewSet, basename='rating')
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # You can switch to LoginView.as_view() if you want custom logic
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
-    path('tasks/', include(router.urls)),  
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('basic-review/', basic_review_create),
-    path('movies-list/', MovieListAPIView.as_view(), name='movie-list'),
-    path('movies-with-ratings/', MovieWithRatingsAPIView.as_view()),
-]
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = [permissions.AllowAny]
+
+class MovieViewSet(ReadOnlyModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    permission_classes = [AllowAny] 
+
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = [permissions.AllowAny]
+
+@api_view(['POST'])
+def basic_review_create(request):
+    serializer = BasicReviewSerializer(data=request.data)
+    if serializer.is_valid():
+        return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MovieListAPIView(APIView):
+    def get(self, request):
+        movies = Movie.objects.all()
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+class MovieWithRatingsAPIView(APIView):
+    def get(self, request):
+        movies = Movie.objects.prefetch_related('ratings').all()
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
