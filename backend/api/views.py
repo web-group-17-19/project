@@ -2,6 +2,9 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import AllowAny
+from .models import Movie
 from .models import Review, Movie, Genre, Rating
 from .serializers import (
     ReviewSerializer, GenreSerializer,
@@ -22,10 +25,10 @@ class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     permission_classes = [permissions.AllowAny]
 
-class MovieViewSet(viewsets.ModelViewSet):
+class MovieViewSet(ReadOnlyModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny] 
 
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
