@@ -24,8 +24,7 @@ urlpatterns = [
     path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('tasks/', include(router.urls)),  
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('tasks/', include(router.urls)),
     path('basic-review/', basic_review_create),
     path('movies-list/', MovieListAPIView.as_view(), name='movie-list'),
-    path('external-movies-with-ratings/', MovieWithRatingsAPIView.as_view()),
+    path('movies-with-ratings/', MovieWithRatingsAPIView.as_view()),
 ]
