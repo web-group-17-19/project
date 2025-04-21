@@ -18,16 +18,22 @@ export class MovieDetailsComponent implements OnInit {
   movie: any;
   reviews: { text: string }[] = [];
   newReview = { text: '' };
-
+  useApiData: boolean = false; // Optional toggle
 
   constructor(private route: ActivatedRoute, private movieService: MovieService) {}
 
   ngOnInit() {
-    const imdbID = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
 
-    this.movieService.getMovies().subscribe(data => {
-      this.movie = data.find((m: { imdbID: string }) => m.imdbID === imdbID);
-    });
+    if (this.useApiData) {
+      this.movieService.getApiMovies().subscribe(data => {
+        this.movie = data.find((m: any) => String(m.id) === id);
+      });
+    } else {
+      this.movieService.getLocalMovies().subscribe(data => {
+        this.movie = data.find((m: any) => m.imdbID === id);
+      });
+    }
   }
   getStars(rating: string): string {
     let value = parseFloat(rating);
