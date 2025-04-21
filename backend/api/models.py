@@ -1,38 +1,39 @@
 from django.db import models
-
 from django.contrib.auth.models import User
 
-class Review(models.Model):
-    text = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+class Genre(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.text
-    
+        return self.name
 
 class MovieManager(models.Manager):
-    def top_rated(self):
-        return self.filter(rating__gte=8)
+    def released_this_year(self, year):
+        return self.filter(release_date__year=year)
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=200)
     description = models.TextField()
     release_date = models.DateField()
-    rating = models.FloatField()
-    genre = models.ForeignKey("Genre", on_delete=models.SET_NULL, null=True, related_name="movies")
+    genres = models.ManyToManyField(Genre, related_name='movies')
 
     objects = MovieManager()
 
     def __str__(self):
         return self.title
-    
-class Genre(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+
+class Review(models.Model):
+    text = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
-        return self.name
-    
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    favorite_genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+        return self.text
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
