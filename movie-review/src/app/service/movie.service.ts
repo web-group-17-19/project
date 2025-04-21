@@ -6,12 +6,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MovieService {
-  private jsonUrl = '../../../assets/movies.json';
+  private jsonUrl = '/assets/movies.json';
+  private apiUrl = 'http://127.0.0.1:8000/api/movies-list/';
 
   constructor(private http: HttpClient) {}
 
-  getMovies(): Observable<any> {
-    console.log("Fetching movies...");
+  getLocalMovies(): Observable<any> {
+    console.log("Fetching movies from local JSON...");
     return this.http.get<any>(this.jsonUrl);
+  }
+
+  getApiMovies(): Observable<any> {
+    console.log("Fetching movies from backend API...");
+    return this.http.get<any>(this.apiUrl);
   }
 }
