@@ -12,10 +12,13 @@ class MovieManager(models.Manager):
         return self.filter(release_date__year=year)
 
 class Movie(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    release_date = models.DateField()
-    genres = models.ManyToManyField(Genre, related_name='movies')
+    title = models.CharField(max_length=255)
+    year = models.PositiveIntegerField()
+    genre = models.CharField(max_length=255)
+    director = models.CharField(max_length=255)
+    actors = models.TextField()
+    plot = models.TextField()
+
 
     objects = MovieManager()
 
@@ -30,9 +33,11 @@ class Review(models.Model):
      def __str__(self):
          return self.text
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(blank=True)
+class Rating(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
+    source = models.CharField(max_length=100)
+    value = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Profile of {self.user.username}"
+        return f"{self.source}: {self.value}"
+
