@@ -18,7 +18,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=255)
     actors = models.TextField()
     plot = models.TextField()
-
+    poster = models.URLField(max_length=500, blank=True)
 
     objects = MovieManager()
 
