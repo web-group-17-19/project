@@ -37,14 +37,15 @@ def basic_review_create(request):
         return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileListAPIView(APIView):
+class MovieListAPIView(APIView):
     def get(self, request):
-        profiles = Profile.objects.all()
-        data = [{'user': p.user.username, 'bio': p.bio} for p in profiles]
-        return Response(data)
+        movies = Movie.objects.all()
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
 
 class MovieByYearAPIView(APIView):
     def get(self, request, year):
         movies = Movie.objects.released_this_year(year)
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
+
