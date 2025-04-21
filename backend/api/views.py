@@ -2,8 +2,11 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import Review, Movie, Genre, Profile
-from .serializers import ReviewSerializer, MovieSerializer, GenreSerializer, SimpleUserSerializer, BasicReviewSerializer
+from .models import Review, Movie, Genre, Rating
+from .serializers import (
+    ReviewSerializer, GenreSerializer,
+    BasicReviewSerializer, MovieSerializer, RatingSerializer
+)
 from django.contrib.auth.models import User
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -14,21 +17,20 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-    permission_classes = [permissions.AllowAny]
-
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = [permissions.AllowAny]
 
-@api_view(['GET'])
-def user_list(request):
-    users = User.objects.all()
-    serializer = SimpleUserSerializer(users, many=True)
-    return Response(serializer.data)
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    permission_classes = [permissions.AllowAny]
+
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = [permissions.AllowAny]
 
 @api_view(['POST'])
 def basic_review_create(request):
@@ -43,9 +45,8 @@ class MovieListAPIView(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
 
-class MovieByYearAPIView(APIView):
-    def get(self, request, year):
-        movies = Movie.objects.released_this_year(year)
+class MovieWithRatingsAPIView(APIView):
+    def get(self, request):
+        movies = Movie.objects.prefetch_related('ratings').all()
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
-
