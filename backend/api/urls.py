@@ -19,7 +19,7 @@ router.register(r'genres', GenreViewSet, basename='genre')
 router.register(r'ratings', RatingViewSet, basename='rating')
 
 urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # You can switch to LoginView.as_view() if you want custom logic
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('tasks/', include(router.urls)),  
