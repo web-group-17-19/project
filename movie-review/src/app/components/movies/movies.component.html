@@ -1,10 +1,5 @@
 <div>
   <h2>Movies List</h2>
-
-  <button (click)="toggleSource()">
-    Switch to {{ useApiData ? 'Local JSON' : 'Backend API' }}
-  </button>
-
   <div class="srch">
     <input class="srch1" type="text" [(ngModel)]="searchQuery" placeholder="Search movies" (input)="searchMovies()">
     <img src="https://images-na.ssl-images-amazon.com/images/I/41gYkruZM2L.png" alt="search icon" class="button">
@@ -12,9 +7,9 @@
 
   <div class="movies-container">
     <div *ngFor="let movie of filteredMovies" class="movie-card" (click)="goToMovieDetails(movie)">
-      <img [src]="movie.Poster || 'https://via.placeholder.com/150'" alt="{{ movie.Title || movie.title }}" class="movie-poster">
+      <img [src]="movie.poster || 'https://via.placeholder.com/150'" alt="{{ movie.Title || movie.title }}" class="movie-poster">
       <h3>{{ movie.Title || movie.title }}<br>
-        <p>{{ movie.Genre || movie.genre }}</p>
+        <p>{{ getGenreList(movie) }}</p>              
       </h3>
     </div>
   </div>

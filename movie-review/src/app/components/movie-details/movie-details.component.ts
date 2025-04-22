@@ -3,8 +3,8 @@ import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../service/movie.service';
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Review } from '../../service/review';
 
 
 @Component({
@@ -16,47 +16,92 @@ import { FormsModule } from '@angular/forms';
 })
 export class MovieDetailsComponent implements OnInit {
   movie: any;
-  reviews: { text: string }[] = [];
+  reviews: Review[] = [];
   newReview = { text: '' };
-  useApiData: boolean = false; // Optional toggle
+  selectedRating = 0;
+  ratingSubmitted = false;
 
   constructor(private route: ActivatedRoute, private movieService: MovieService) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    if (this.useApiData) {
-      this.movieService.getApiMovies().subscribe(data => {
+    this.movieService.getApiMovies().subscribe(data => {
         this.movie = data.find((m: any) => String(m.id) === id);
+        this.checkUserRating(this.movie.id);
+        this.loadReviews(this.movie.id);
       });
-    } else {
-      this.movieService.getLocalMovies().subscribe(data => {
-        this.movie = data.find((m: any) => m.imdbID === id);
-      });
-    }
   }
-  getStars(rating: string): string {
-    let value = parseFloat(rating);
 
-    if (rating.includes('%')) {
-      value = (value / 100) * 5;
-    } else if (value > 10) {
-      value = (value / 100) * 5;
-    } else {
-      value = (value / 2);
-    }
-
-    const stars = '⭐'.repeat(Math.round(value));
-    return stars.padEnd(5, '☆');
+  checkUserRating(movieId: number) {
+    this.movieService.getUserRating(movieId).subscribe({
+      next: (res) => {
+        if (res.score !== null) {
+          this.selectedRating = res.score;
+          this.ratingSubmitted = true;
+        }
+      },
+      error: (err) => {
+        console.error('Could not load user rating', err);
+      }
+    });
   }
-  addReview() {
-    if (this.newReview.text.trim()) {
-      this.reviews.push({ ...this.newReview });
-      this.newReview = { text: '' };
-    }
+  
+  getGenreList(movie: any): string {
+    return movie.genres?.map((g: any) => g.name).join(', ') || 'No genres listed';
   }
 
   goBack() {
     window.history.back();
+  }
+
+  rateMovie(score: number) {
+    if (this.ratingSubmitted) return;
+  
+    this.selectedRating = score;
+  
+    const ratingPayload = {
+      movie: this.movie.id,
+      score: score
+    };
+  
+    this.movieService.submitRating(ratingPayload).subscribe({
+      next: () => {
+        this.ratingSubmitted = true;
+    
+        this.movieService.getMovieById(this.movie.id).subscribe(updatedMovie => {
+          this.movie = updatedMovie;
+        });
+      },
+      error: (err) => {
+        console.error('Failed to submit rating', err);
+      }
+    });
+  } 
+
+  loadReviews(movieId: number) {
+    this.movieService.getReviews(movieId).subscribe(data => {
+      this.reviews = data;
+    });
+  }
+  
+  addReview() {
+    if (this.newReview.text.trim()) {
+      const reviewPayload = {
+        text: this.newReview.text,
+        movie: this.movie.id
+      };
+  
+      this.movieService.submitReview(reviewPayload).subscribe({
+        next: (res: Review) => {
+          console.log('Review submission response:', res);
+          this.loadReviews(this.movie.id);
+          this.newReview = { text: '' };
+        },
+        error: (err) => {
+          console.error('Failed to submit review', err);
+        }
+      });
+    }
   }
 }

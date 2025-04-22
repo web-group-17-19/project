@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -14,12 +15,22 @@ export class AuthService {
   constructor(private http : HttpClient) { }
 
   login(data : {username:string, password :string}){
-    return this.http.post(`${this.apiUrl}/token/`, data);
+    return this.http.post(`${this.apiUrl}/login/`, data);
   }
 
-  logout(){
+  logout() {
     const refresh = localStorage.getItem('refresh_token');
-    return this.http.post(`${this.apiUrl}/logout/`, { refresh });
+    return this.http.post(`${this.apiUrl}/logout/`, { refresh }).pipe(
+      tap(() => {
+        this.clearTokens(); 
+        this.isLoggedIn.next(false); 
+      })
+    );
+  }
+
+  refreshToken() {
+    const refresh = localStorage.getItem('refresh_token');
+    return this.http.post(`${this.apiUrl}/refresh/`, { refresh });
   }
 
   storeTokens(tokens: any){

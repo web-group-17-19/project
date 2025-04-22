@@ -14,8 +14,7 @@ import { NgForOf } from '@angular/common';
 export class MoviesComponent implements OnInit {
   movies: any[] = [];
   filteredMovies: any[] = [];
-  searchQuery: string = '';
-  useApiData: boolean = false;  // Toggle between API and local
+  searchQuery: string = ''; 
 
   constructor(private movieService: MovieService, private router: Router) {}
 
@@ -24,22 +23,10 @@ export class MoviesComponent implements OnInit {
   }
 
   fetchMovies() {
-    if (this.useApiData) {
-      this.movieService.getApiMovies().subscribe(data => {
-        this.movies = data;
-        this.filteredMovies = data;
-      });
-    } else {
-      this.movieService.getLocalMovies().subscribe(data => {
-        this.movies = data;
-        this.filteredMovies = data;
-      });
-    }
-  }
-
-  toggleSource() {
-    this.useApiData = !this.useApiData;
-    this.fetchMovies();
+    this.movieService.getApiMovies().subscribe(data => {
+      this.movies = data;
+      this.filteredMovies = data;
+    });
   }
 
   searchMovies() {
@@ -47,6 +34,10 @@ export class MoviesComponent implements OnInit {
       (movie.Title || movie.title).toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
+
+  getGenreList(movie: any): string {
+    return movie.genres?.map((g: any) => g.name).join(', ') || 'No genres listed';
+  }  
 
   goToMovieDetails(movie: any) {
     const id = movie.imdbID || movie.id;

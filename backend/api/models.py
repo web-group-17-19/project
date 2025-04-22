@@ -14,30 +14,34 @@ class MovieManager(models.Manager):
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     year = models.PositiveIntegerField()
-    genre = models.CharField(max_length=255)
-    director = models.CharField(max_length=255)
+    genres = models.ManyToManyField('Genre', related_name='movies')
     actors = models.TextField()
     plot = models.TextField()
     poster = models.URLField(max_length=500, blank=True)
 
     objects = MovieManager()
 
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings:
+            return sum(r.score for r in ratings) / ratings.count()
+        return None
+
     def __str__(self):
         return self.title
-
-class Review(models.Model):
     
-     text = models.TextField()
-     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
- 
-     def __str__(self):
-         return self.text
-
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
-    source = models.CharField(max_length=100)
-    value = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField()
 
+    class Meta:
+        unique_together = ('movie', 'user')
+
+class Review(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
+    text = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+ 
     def __str__(self):
-        return f"{self.source}: {self.value}"
-
+        return f'{self.owner.username} — {self.text[:30]}'

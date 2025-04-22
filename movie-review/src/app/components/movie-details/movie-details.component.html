@@ -3,42 +3,52 @@
 
   <div class="movie-details">
     <div class="movie-info">
-      <h2>{{ movie.Title }}</h2>
-      <p><strong>Year:</strong> {{ movie.Year }}</p>
-      <p><strong>Genre:</strong> {{ movie.Genre }}</p>
-      <p><strong>Director:</strong> {{ movie.Director }}</p>
-      <p><strong>Actors:</strong> {{ movie.Actors }}</p>
-      <p><strong>Plot:</strong> {{ movie.Plot }}</p>
+      <h2>{{ movie.title }}</h2>
+      <p><strong>Year:</strong> {{ movie.year }}</p>
+      <p><strong>Genre:</strong> {{ getGenreList(movie) }}</p>
+      <p><strong>Actors:</strong> {{ movie.actors }}</p>
+      <p><strong>Plot:</strong> {{ movie.plot }}</p>
 
-      <div class="ratings">
-
-        <h3>Ratings:</h3>
-        <div *ngFor="let r of movie.Ratings" class="rating">
-          <strong>{{ r.Source }}:</strong>
-          <span class="stars">{{ getStars(r.Value) }}</span> ({{ r.Value }})
+      <div class="rate-movie">
+        <h3>Rate this movie</h3>
+        <div class="star-rating">
+          <span 
+            *ngFor="let star of [1,2,3,4,5]" 
+            (click)="rateMovie(star)" 
+            class="star" 
+            [class.selected]="star <= selectedRating">
+            ★
+          </span>
         </div>
-      </div>
+        <p *ngIf="ratingSubmitted" class="success">Thanks for your rating!</p>
+      </div>  
+      <p *ngIf="movie.average_rating !== null">
+        <strong>Average Rating:</strong> {{ movie.average_rating }} / 5
+      </p>
+      <p *ngIf="movie.average_rating === null">
+        <strong>Average Rating:</strong> Not rated yet
+      </p>          
     </div>
 
     <div class="movie-poster-container">
-      <img [src]="movie.Poster" alt="{{ movie.Title }}" class="movie-poster">
+      <img [src]="movie.poster" alt="{{ movie.title }}" class="movie-poster">
     </div>
   </div>
-  <div class="review">
-    <h3>Add a review</h3><br>
-    <div class="feedback">
-      <textarea [(ngModel)]="newReview.text" placeholder="Your review"></textarea>
-      <button class="leave" (click)="addReview()">Leave</button>
+    <div class="review">
+      <h3>Add a review</h3><br>
+      <div class="feedback">
+        <textarea [(ngModel)]="newReview.text" placeholder="Your review"></textarea>
+        <button class="leave" (click)="addReview()">Send</button>
+      </div>
     </div>
-  </div>
-
-  <div class="reviews">
-    <h3>Reviews</h3>
-    <ul>
-      <li *ngFor="let review of reviews">
-        {{ review.text }}
-      </li>
-    </ul>
-  </div>
+    
+    <div class="reviews">
+      <h3>Reviews</h3>
+      <ul>
+        <li *ngFor="let review of reviews">
+           {{ review.owner }}: {{ review.text }}
+        </li>
+      </ul>
+    </div>
 
 </div>

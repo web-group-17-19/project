@@ -6,9 +6,12 @@ from .views import (
     MovieViewSet, 
     GenreViewSet,
     RatingViewSet,
-    basic_review_create,
     MovieListAPIView, 
-    MovieWithRatingsAPIView
+    MovieDetailAPIView,
+    submit_rating,
+    get_user_rating,
+    create_review,
+    get_reviews_by_movie
 )
 
 
@@ -23,8 +26,10 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('tasks/', include(router.urls)),  
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('basic-review/', basic_review_create),
     path('movies-list/', MovieListAPIView.as_view(), name='movie-list'),
-    path('movies-with-ratings/', MovieWithRatingsAPIView.as_view()),
+    path('movies/<int:pk>/', MovieDetailAPIView.as_view(), name='movie-detail'),
+    path('ratings/', submit_rating, name='submit_rating'),
+    path('ratings/<int:movie_id>/', get_user_rating, name='get_user_rating'),
+    path('reviews/', create_review),
+    path('reviews/<int:movie_id>/', get_reviews_by_movie),
 ]
