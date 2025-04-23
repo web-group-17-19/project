@@ -1,9 +1,9 @@
 # Web-Dev 
 Wednesday 17-19 group
 
-Balseit Eldana
-Arystanbekov Artur
-Artykbay Birzhan
+#### Balseit Eldana
+#### Artykbay Birzhan
+#### Arystanbekov Artur
 
 ## Movie Review & Rating Platform
 
