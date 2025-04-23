@@ -19,7 +19,7 @@ export class MovieService {
 
   getApiMovies(): Observable<any> {
     console.log("Fetching movies from backend API...");
-    return this.http.get<any>(`${this.apiUrl}/movies-list/`);
+    return this.http.get<any>(`${this.apiUrl}/tasks/movies`);
   }
 
   getMovieById(id: string): Observable<any> {

@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Review, Movie, Genre, Rating
 from .serializers import (
     ReviewSerializer, GenreSerializer,
-    BasicReviewSerializer, MovieSerializer, RatingSerializer
+    MovieSerializer, RatingSerializer
 )
 
 class MovieDetailAPIView(APIView):
@@ -74,12 +74,6 @@ def get_reviews_by_movie(request, movie_id):
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
 
-
-class MovieListAPIView(APIView):
-    def get(self, request):
-        movies = Movie.objects.all()
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
     
 @api_view(['POST'])
 def submit_rating(request):
